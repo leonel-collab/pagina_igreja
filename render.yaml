@@ -9,5 +9,3 @@
         generateValue: true
       - key: FLASK_ENV
         value: production
-      - key: DATABASE_URL
-        value: mysql+pymysql://root:1984@localhost:3306/controle_membros
