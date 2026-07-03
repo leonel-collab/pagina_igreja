@@ -1,0 +1,103 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ app_name }}{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for("static", filename="css/style.css") }}">
+                            <style>
+        body {
+            background: url('/static/img/ovelha.jpg') no-repeat center center fixed !important;
+            background-size: cover !important;
+            background-position: center !important;
+            background-attachment: fixed !important;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.25);
+            z-index: 0;
+            pointer-events: none;
+        }
+        main.container, footer, nav.navbar, nav[aria-label="breadcrumb"], .alert {
+            position: relative;
+            z-index: 1;
+        }
+        .card {
+            background-color: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(10px);
+        }
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="d-flex flex-column min-vh-100">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm sticky-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="{{ url_for("membros.dashboard") }}"><i class="fas fa-church me-2"></i>{{ app_name }}</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"><span class="navbar-toggler-icon"></span></button>
+            {% if current_user.is_authenticated %}
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for("membros.dashboard") }}"><i class="fas fa-chart-pie me-1"></i> BNS</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for("membros.listar_membros") }}"><i class="fas fa-users me-1"></i> Membros</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for("membros.cadastro") }}"><i class="fas fa-user-plus me-1"></i> Novo Membro</a></li><li class="nav-item"><a class="nav-link" href="{{ url_for("email.enviar_email") }}"><i class="fas fa-bullhorn me-1"></i> Email</a></li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"><i class="fas fa-user-circle me-1"></i> {{ current_user.username }}</a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><span class="dropdown-item-text text-muted small"><i class="fas fa-envelope me-1"></i> {{ current_user.email }}</span></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" href="{{ url_for("auth.logout") }}"><i class="fas fa-sign-out-alt me-1"></i> Sair</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            {% endif %}
+        </div>
+    </nav>
+    <div class="container mt-3">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show d-flex align-items-center" role="alert">
+                        <div class="me-2">{% if category == "success" %}<i class="fas fa-check-circle fa-lg"></i>{% elif category == "danger" %}<i class="fas fa-exclamation-circle fa-lg"></i>{% elif category == "warning" %}<i class="fas fa-exclamation-triangle fa-lg"></i>{% else %}<i class="fas fa-info-circle fa-lg"></i>{% endif %}</div>
+                        <div>{{ message }}</div>
+                        <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+    <main class="container my-4 flex-grow-1">{% block content %}{% endblock %}</main>
+    <footer class="bg-white text-center py-3 mt-auto border-top">
+        <div class="container"><p class="mb-0 text-muted small"><i class="fas fa-heart text-danger me-1"></i> {{ app_name }} &copy; {{ current_year }} - Todos os direitos reservados</p></div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>document.addEventListener("DOMContentLoaded",function(){document.querySelectorAll(".alert-dismissible").forEach(function(a){setTimeout(function(){new bootstrap.Alert(a).close()},5000)})});</script>
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

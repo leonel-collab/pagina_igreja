@@ -1,0 +1,112 @@
+﻿{% extends "base.html" %}
+{% block title %}{{ membro.nome }} - {{ app_name }}{% endblock %}
+{% block content %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ url_for("membros.dashboard") }}">Dashboard</a></li>
+        <li class="breadcrumb-item"><a href="{{ url_for("membros.listar_membros") }}">Membros</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{ membro.nome }}</li>
+    </ol>
+</nav>
+<div class="card shadow border-0">
+    <div class="card-body p-4">
+        <div class="d-flex align-items-center mb-4">
+            {% if membro.foto %}
+                <img src="{{ membro.foto }}" alt="{{ membro.nome }}" class="rounded-circle me-3" style="width: 80px; height: 80px; object-fit: cover;">
+            {% else %}
+                <div class="rounded-circle bg-primary bg-opacity-10 p-4 me-3">
+                    <i class="fas fa-user fa-3x text-primary"></i>
+                </div>
+            {% endif %}
+            <div>
+                <h3 class="mb-1 fw-bold">{{ membro.nome }}</h3>
+                <span class="badge {% if membro.ativo %}bg-success{% else %}bg-secondary{% endif %} fs-6">
+                    {{ "Ativo" if membro.ativo else "Inativo" }}
+                </span>
+                <small class="text-muted ms-2">Membro #{{ membro.id }}</small>
+            </div>
+        </div>
+
+        <!-- Upload de Foto -->
+        <div class="mb-4">
+            <form action="{{ url_for("membros.upload_foto", id=membro.id) }}" method="POST" enctype="multipart/form-data" class="d-flex align-items-center gap-2">
+                <input type="file" name="foto" accept="image/*" class="form-control form-control-sm" style="max-width: 300px;" required>
+                <button type="submit" class="btn btn-sm btn-outline-primary">
+                    <i class="fas fa-camera me-1"></i> Trocar Foto
+                </button>
+            </form>
+        </div>
+
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="bg-light rounded p-3 h-100">
+                    <small class="text-muted text-uppercase fw-bold"><i class="fas fa-envelope me-1"></i> Email</small>
+                    <p class="mb-0 mt-1"><a href="mailto:{{ membro.email }}" class="text-decoration-none">{{ membro.email }}</a></p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="bg-light rounded p-3 h-100">
+                    <small class="text-muted text-uppercase fw-bold"><i class="fas fa-phone me-1"></i> Telefone</small>
+                    <p class="mb-0 mt-1">{{ membro.telefone }}</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="bg-light rounded p-3 h-100">
+                    <small class="text-muted text-uppercase fw-bold"><i class="fas fa-birthday-cake me-1"></i> Data de Nascimento</small>
+                    <p class="mb-0 mt-1">{{ membro.data_nascimento.strftime("%d/%m/%Y") }}</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="bg-light rounded p-3 h-100">
+                    <small class="text-muted text-uppercase fw-bold"><i class="fas fa-calendar-alt me-1"></i> Idade</small>
+                    <p class="mb-0 mt-1">{{ membro.idade }} anos</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="bg-light rounded p-3 h-100">
+                    <small class="text-muted text-uppercase fw-bold"><i class="fas fa-map-marker-alt me-1"></i> Endereco</small>
+                    <p class="mb-0 mt-1">{{ membro.endereco }}</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="bg-light rounded p-3 h-100">
+                    <small class="text-muted text-uppercase fw-bold"><i class="fas fa-city me-1"></i> Cidade/Estado</small>
+                    <p class="mb-0 mt-1">{{ membro.cidade }}/{{ membro.estado }}</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="bg-light rounded p-3 h-100">
+                    <small class="text-muted text-uppercase fw-bold"><i class="fas fa-clock me-1"></i> Data de Cadastro</small>
+                    <p class="mb-0 mt-1">{{ membro.data_cadastro.strftime("%d/%m/%Y as %H:%M") }}</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="bg-light rounded p-3 h-100">
+                    <small class="text-muted text-uppercase fw-bold"><i class="fas fa-user-tag me-1"></i> Cadastrado por</small>
+                    <p class="mb-0 mt-1">{{ membro.cadastrado_por.username if membro.cadastrado_por else "Sistema" }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex gap-2 mt-4 flex-wrap">
+            <a href="{{ url_for("membros.editar", id=membro.id) }}" class="btn btn-primary">
+                <i class="fas fa-edit me-1"></i> Editar Dados
+            </a>
+            {% if membro.ativo %}
+            <form action="{{ url_for("membros.deletar", id=membro.id) }}" method="POST" onsubmit="return confirm('Desativar {{ membro.nome }}?')">
+                <button type="submit" class="btn btn-warning"><i class="fas fa-user-slash me-1"></i> Desativar</button>
+            </form>
+            {% else %}
+            <form action="{{ url_for("membros.reativar", id=membro.id) }}" method="POST">
+                <button type="submit" class="btn btn-success"><i class="fas fa-user-check me-1"></i> Reativar</button>
+            </form>
+            {% endif %}
+            <a href="{{ url_for("email.enviar_email") }}" class="btn btn-info">
+                <i class="fas fa-bullhorn me-1"></i> Enviar Email
+            </a>
+            <a href="{{ url_for("membros.listar_membros") }}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-1"></i> Voltar
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

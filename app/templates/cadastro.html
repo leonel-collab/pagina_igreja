@@ -1,0 +1,116 @@
+﻿{% extends "base.html" %}
+{% block title %}Cadastro de Membro - {{ app_name }}{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow border-0">
+            <div class="card-body p-4">
+                <div class="d-flex align-items-center mb-4">
+                    <div class="rounded-circle bg-primary bg-opacity-10 p-3 me-3">
+                        <i class="fas fa-user-plus fa-2x text-primary"></i>
+                    </div>
+                    <div>
+                        <h4 class="mb-0 fw-bold">Novo Membro</h4>
+                        <p class="text-muted mb-0">Preencha os dados para cadastrar um novo membro</p>
+                    </div>
+                </div>
+                <form method="POST" action="{{ url_for("membros.cadastro") }}" class="row g-3" enctype="multipart/form-data">
+                    {{ form.hidden_tag() }}
+
+                    <!-- Foto -->
+                    <div class="col-12 mb-2">
+                        <label class="form-label fw-bold">{{ form.foto.label }}</label>
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="rounded-circle bg-light d-flex align-items-center justify-content-center border" id="previewContainer" style="width:80px;height:80px">
+                                <i class="fas fa-camera text-muted fa-2x" id="previewIcon"></i>
+                                <img id="previewImage" src="#" alt="Preview" class="rounded-circle d-none" style="width:80px;height:80px;object-fit:cover">
+                            </div>
+                            <div>
+                                {{ form.foto(class="form-control form-control-sm") }}
+                                <small class="text-muted">Formatos: JPG, PNG. Max: 5MB</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">{{ form.nome.label }}</label>
+                        {{ form.nome(class="form-control", placeholder="Nome completo do membro") }}
+                        {% for error in form.nome.errors %}
+                            <div class="text-danger small mt-1">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">{{ form.email.label }}</label>
+                        {{ form.email(class="form-control", placeholder="email@exemplo.com") }}
+                        {% for error in form.email.errors %}
+                            <div class="text-danger small mt-1">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">{{ form.telefone.label }}</label>
+                        {{ form.telefone(class="form-control", placeholder="(11) 99999-9999") }}
+                        {% for error in form.telefone.errors %}
+                            <div class="text-danger small mt-1">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">{{ form.data_nascimento.label }}</label>
+                        {{ form.data_nascimento(class="form-control", type="date") }}
+                        {% for error in form.data_nascimento.errors %}
+                            <div class="text-danger small mt-1">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">{{ form.estado.label }}</label>
+                        {{ form.estado(class="form-select") }}
+                        {% for error in form.estado.errors %}
+                            <div class="text-danger small mt-1">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">{{ form.cidade.label }}</label>
+                        {{ form.cidade(class="form-control", placeholder="Cidade") }}
+                        {% for error in form.cidade.errors %}
+                            <div class="text-danger small mt-1">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">{{ form.endereco.label }}</label>
+                        {{ form.endereco(class="form-control", placeholder="Rua, numero, bairro, complemento") }}
+                        {% for error in form.endereco.errors %}
+                            <div class="text-danger small mt-1">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    <div class="col-12">
+                        <div class="form-check">
+                            {{ form.ativo(class="form-check-input") }}
+                            <label class="form-check-label">{{ form.ativo.label }}</label>
+                        </div>
+                    </div>
+                    <div class="col-12 d-flex justify-content-between mt-4">
+                        <a href="{{ url_for("membros.listar_membros") }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-1"></i> Cancelar
+                        </a>
+                        {{ form.submit(class="btn btn-primary px-4") }}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('{{ form.foto.id }}').addEventListener('change', function(e) {
+    var file = e.target.files[0];
+    if (file) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('previewImage').src = e.target.result;
+            document.getElementById('previewImage').classList.remove('d-none');
+            document.getElementById('previewIcon').classList.add('d-none');
+        };
+        reader.readAsDataURL(file);
+    }
+});
+</script>
+{% endblock %}

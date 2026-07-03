@@ -1,0 +1,36 @@
+﻿# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+.venv/
+env/
+venv/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Environment
+.env
+.env.example
+
+# Database
+*.db
+instance/
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Uploads
+static/uploads/*
+!static/uploads/.gitkeep
+
+# Misc
+test_write.txt
