@@ -33,6 +33,11 @@ def create_app():
     elif database_url.startswith('mysql://'):
         database_url = database_url.replace('mysql://', 'mysql+pymysql://', 1)
 
+    # Remove ssl-mode da URL (PyMySQL nao aceita como parametro)
+    if database_url and "ssl-mode=" in database_url:
+        database_url = database_url.split("?")[0]
+        app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {"connect_args": {"ssl": {}}}
+
     app.config['SQLALCHEMY_DATABASE_URI'] = database_url
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
