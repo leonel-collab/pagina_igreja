@@ -36,6 +36,17 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = database_url
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+    # Configuracao SSL para MySQL (Aiven)
+    if database_url and 'ssl-mode=' in database_url:
+        from urllib.parse import urlparse, parse_qs, urlencode, urlunparse
+        parsed = urlparse(database_url)
+        params = parse_qs(parsed.query)
+        if 'ssl-mode' in params:
+            del params['ssl-mode']
+        new_query = urlencode(params, doseq=True) if params else ''
+        database_url = urlunparse(parsed._replace(query=new_query))
+        app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {'connect_args': {'ssl': {}}}
+
     # Configuracao de upload
     app.config['UPLOAD_FOLDER'] = os.path.join(
         os.path.dirname(os.path.abspath(__file__)), '..', 'static', 'uploads'
@@ -106,4 +117,5 @@ def create_app():
         }
 
     return app
+
 
