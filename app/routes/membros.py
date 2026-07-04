@@ -258,3 +258,12 @@ def reativar(id):
 
 
 
+
+
+@membros_bp.route("/bg")
+def background_img():
+    """Serve a imagem de fundo"""
+    from flask import send_from_directory
+    import os
+    img_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "static", "img")
+    return send_from_directory(img_dir, "ovelha.jpg")
