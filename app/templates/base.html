@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="{{ url_for("static", filename="css/style.css") }}">
                             <style>
         body {
-            background: url('/static/img/ovelha.jpg') no-repeat center center fixed !important;
+            background: url('{{ url_for('static', filename='img/ovelha.jpg') }}') no-repeat center center fixed !important;
             background-size: cover !important;
             background-position: center !important;
             background-attachment: fixed !important;
